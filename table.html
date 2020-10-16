@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <title>Lista de compras</title>
+    <link rel="icon" type="imagem/png" href="IMG/favicon.png">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body style="background-color: lightgray;">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Compras</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.html">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/table.html">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/criadores.html">Contatos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="coloring">
+        Listas de compras
+    </div>
+    <div class="container">
+        <table class="table">
+            <thead class="cabecalho">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome da lista</th>
+                    <th>Produtos</th>
+                    <th>Data de criação</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align: center;">
+        <input type="button" value="Adicionar lista" class="btn btn-primary" onclick="vaipraAddproduto()">
+    </div>
+    <script>
+        var tbody = document.getElementById('tbody')
+        $.getJSON('http://localhost:3001/produtos', function(data) {
+            console.log(data)
+            data.forEach(element => {
+                $("#tbody").append(`
+                <tr>
+                    <td scope="row"> ${element.id}</td>
+                    <td>${element.nome}
+                    <td><textarea rows="4" cols="50" style="background-color: lightgray;" readonly>${element.produtos}</textarea></td>
+                    <td>${element.data}</td>
+                    <td>
+                     <form action="editar.html" >
+                    <input type="hidden" value="${element.id}" name="id">
+                    <input type="hidden" value="${element.nome}" name="nome">
+                    <input type="hidden" value="${element.produtos}" name="produtos">
+                    <input type="hidden" value="${element.data}" name="data">
+                    <input type="submit" value="Editar" class="btn btn-primary"> 
+
+                    </form>
+                    </td>
+                    
+                    <td><input type="button" value="Deletar" class="btn btn-primary" onclick="removerProduto(${element.id})"></td>
+                </tr>
+                `)
+            });
+        })
+
+        function removerProduto(id) {
+            if (confirm('Tem certeza que deseja deletar a lista?') == true) {
+                fetch('http://localhost:3001/Produtos/' + id, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "DELETE"
+                })
+                alert("Lista deletada com sucesso!")
+            }
+        }
+
+        function vaipraAddproduto() {
+            window.location.href = "addproduto.html"
+        }
+
+        function vaipraEditar() {
+            window.location.href = "editar.html"
+        }
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>

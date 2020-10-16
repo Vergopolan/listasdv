@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <title>Lista de compras</title>
+    <link rel="icon" type="imagem/png" href="IMG/favicon.png">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body style="background-color: lightgray;">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Compras</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/table.html">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/criadores.html">Contatos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <p class="coloring">
+        Editar
+    </p>
+    <div class="container mt-5" style="text-align: center;">
+        <form method="POST" id="form1">
+            <label for="nome">Edite o nome da lista:</label><br>
+            <input type="text" name="nome" id="nome" placeholder="Nome da lista" onblur="proibe(nome)"><br><br>
+            <label for="nome">Edite os produtos da lista:</label><br>
+            <textarea name="produtos" id="produtos" placeholder="Produtos" rows="4" cols="50"
+                onblur="proibe(produtos)"></textarea><br><br>
+            <label for="nome">Edite a data da lista:</label><br>
+            <input type="date" name="Data de criação" id="data" placeholder="Data" onblur="proibe(data)"><br><br>
+            <input type="button" value="Salvar edição" class="btn btn-primary" onclick="putTabela() ">
+            <input type="button" value="Voltar" class="btn btn-primary" onclick="vaipraTable()">
+        </form>
+    </div>
+    <script>
+        let url = new URL(window.location.href)
+        let params = new URLSearchParams(url.search);
+        let id = params.get('id');
+        let nome = params.get('nome');
+        let produtos = params.get('produtos');
+        let data = params.get('data');
+
+        let inputNome = document.querySelector("#nome");
+        inputNome.value = nome;
+        inputNome.placeholder = "Insira um nome";
+
+        let inputProdutos = document.querySelector("#produtos");
+        inputProdutos.innerHTML = produtos;
+        inputProdutos.placeholder = "Insira os produtos";
+
+        let inputData = document.querySelector("#data");
+        inputData.value = data;
+
+        function vaipraTable() {
+            window.location.href = "table.html"
+        }
+
+        function proibe(idparm) {
+            if (idparm.value == '') {
+                alert('Insira alguma informação no campo!')
+                return true;
+            }
+            return false;
+        }
+
+        function putTabela() {
+
+
+            nome = inputNome.value;
+            produtos = inputProdutos.value;
+            data = inputData.value;
+
+            if (inputNome.value == '') {
+                alert('Insira alguma informação no campo!')
+            }
+
+            else if (inputProdutos.value == '') {
+                alert('Insira alguma informação no campo!')
+            }
+
+            else if (inputData.value == '') {
+                alert('Insira alguma informação no campo!')
+            }
+            
+            
+            else if (confirm('Tem certeza que deseja editar a lista?') == true) {
+
+                fetch('http://localhost:3001/Produtos/' + id, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT",
+                    body: JSON.stringify({
+                        nome: nome,
+                        produtos: produtos,
+                        data: data,
+                    })
+                })
+                vaipraTable()
+                alert("Lista editada com sucesso!")
+            }
+        }
+
+
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
